@@ -3,13 +3,14 @@
         <div class="pad">
 
             <button id="shang">up</button>
-            <button id="zuo">left</button>
-            <button id="xia">down</button>
             <button id="you">right</button>
+            <button id="xia">down</button>
+            <button id="zuo">left</button>
+
 
         </div>
         <div class="room">
-            <button @keydown="logKey">点击此处激活车辆控制</button>
+            <button id="keyBoard">点击此处激活车辆控制</button>
             自己ID<input type="text" v-model="myPeerid" id="myPeerid" />
             <br>
             对方ID<input type="text" v-model="youPeerid" id="youPeerid" />
@@ -50,21 +51,79 @@ var peer = new Peer("pc", {
     path: '/video'
 });
  */
-
-
+function throttle<T extends (...args: any[]) => void>(
+    fn: T,
+    delay: number
+): (...args: Parameters<T>) => void {
+    let lastTime = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    return function (...args: Parameters<T>): void {
+        const now = new Date().getTime();
+        if (now - lastTime < delay) {
+            if (timer) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(() => {
+                lastTime = now;
+                // @ts-ignore
+                fn.apply(this, args);
+            }, delay);
+        } else {
+            lastTime = now;
+            // @ts-ignore
+            fn.apply(this, args);
+        }
+    };
+}
 
 let chaoSheng = ref(false);
 
 
 function logKey(event: any) {
-    console.log(event.key);
+    init(event.key)
 }
 
+const throttledLogKey = throttle(logKey, 500);
+
+
+
+
+
+
+
+const changeColor = (btn: HTMLElement | null, t?: string) => {
+    if (btn != null) {
+        if (t == null) {
+            btn.style.backgroundColor = "#35363a";
+            btn.style.color = "white";
+        } else {
+            btn.style.background = "#f0f0f0"
+            btn.style.color = "black";
+        }
+
+    }
+
+
+}
 
 onMounted(() => {
-    init(key);
-})
+    const keyBoard = document.getElementById('keyBoard');
+    if (keyBoard)
+        keyBoard.addEventListener('keydown', throttledLogKey);
 
+    const btn1 = document.getElementById('zuo')
+    const btn2 = document.getElementById('you')
+    const btn3 = document.getElementById('shang')
+    const btn4 = document.getElementById('xia')
+
+
+    setInterval(() => {
+        changeColor(btn1, '')
+        changeColor(btn2, '')
+        changeColor(btn3, '')
+        changeColor(btn4, '')
+    }, 1000)
+})
 
 
 </script>
@@ -73,6 +132,7 @@ onMounted(() => {
 #xia,
 #zuo,
 #you {
-    border-radius: 10px;
+    border-radius: 20px;
+    background-color: pink;
 }
 </style>
