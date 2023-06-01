@@ -10,26 +10,36 @@
 
         </div>
         <div class="room">
-            <button id="keyBoard">点击此处激活车辆控制</button>
+            <button id="keyBoard" style="background-color: #ffffff;">点击此处激活车辆控制</button>
             <el-switch v-model="chaoSheng" /> 超声波跟随
             <br>
-            <button id="callBtn">确认</button>
+
         </div>
 
         <div class="container-fluid">
-            <h1 class="text-center">监控</h1>
-            <!--  <video autoplay controls id="1"></video>
-            <video autoplay controls id="2"></video>
-            <video autoplay controls id="3"></video>
-            <video autoplay controls id="4"></video> -->
-            <div class="jianKong">
-                <div id="jk1">监控1</div>
-                <div id="jk2">监控2</div>
-                <div id="jk3">监控3</div>
-                <div id="jk4">监控4</div>
+            <h1 style="text-align: center;">监控</h1>
+            <el-row :gutter="20" style="margin-bottom: 20px;">
+                <el-col :span="6">
+                    <div id="jk1" class="jian card">监控1</div>
+                </el-col>
+                <el-col :span="6">
+                    <div id="jk2" class="jian card">监控2</div>
+                </el-col>
+                <el-col :span="6">
+                    <div id="jk3" class="jian card">监控3</div>
+                </el-col>
+                <el-col :span="6">
+                    <div id="jk4" class="jian card">监控4</div>
+                </el-col>
+            </el-row>
+            <div id="di1" style="display: flex;justify-content: space-between;gap: 20px;">
+
             </div>
-            <div id="di1"></div>
-            <div id="di2"></div>
+            <div id="di2" style="display: flex;justify-content: space-between;gap: 20px;margin-top:20px">
+
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -49,6 +59,8 @@ function createVideoPlayer(id: string, object: any, pl: string) {
     const videoElement = document.createElement('video');
     videoElement.controls = true;
     videoElement.id = id
+    videoElement.width = 900
+    videoElement.className = 'card'
     videoElement.srcObject = object;
     // 将video元素添加到id为"jk"的父元素上
     const container = document.getElementById(pl);
@@ -104,7 +116,7 @@ function logKey(event: any) {
     init(event.key)
 }
 
-const throttledLogKey = throttle(logKey, 500);
+const throttledLogKey = throttle(logKey, 100);
 
 
 
@@ -136,11 +148,11 @@ onMounted(() => {
 
     jk1?.addEventListener("click", () => {
         if (jk1S.value) {
-            AddClass(jk1, "bg-success")
+            AddClass(jk1, "jianAc")
             jk1S.value = false
             createVideoPlayer("v1", GetStream(), 'di1')
         } else {
-            RemoveClass(jk1, "bg-success")
+            RemoveClass(jk1, "jianAc")
             destroyVideoPlayer("v1")
             jk1S.value = true
             console.log("执行移除")
@@ -149,33 +161,33 @@ onMounted(() => {
     })
     jk2?.addEventListener("click", () => {
         if (jk2S.value) {
-            AddClass(jk2, "bg-success")
+            AddClass(jk2, "jianAc")
             jk2S.value = false
             createVideoPlayer("v2", GetStream2(), 'di1')
         } else {
-            RemoveClass(jk2, "bg-success")
+            RemoveClass(jk2, "jianAc")
             jk2S.value = true
             destroyVideoPlayer("v2")
         }
     })
     jk3?.addEventListener("click", () => {
         if (jk3S.value) {
-            AddClass(jk3, "bg-success")
+            AddClass(jk3, "jianAc")
             jk3S.value = false
             createVideoPlayer("v3", GetStream3(), 'di2')
         } else {
-            RemoveClass(jk3, "bg-success")
+            RemoveClass(jk3, "jianAc")
             jk3S.value = true
             destroyVideoPlayer("v3")
         }
     })
     jk4?.addEventListener("click", () => {
         if (jk4S.value) {
-            AddClass(jk4, "bg-success")
+            AddClass(jk4, "jianAc")
             jk4S.value = false
             createVideoPlayer("v4", GetStream4(), 'di2')
         } else {
-            RemoveClass(jk4, "bg-success")
+            RemoveClass(jk4, "jianAc")
             jk4S.value = true
             destroyVideoPlayer("v4")
         }
@@ -183,9 +195,18 @@ onMounted(() => {
 
 
     const keyBoard = document.getElementById('keyBoard');
-    if (keyBoard)
+    if (keyBoard) {
         keyBoard.addEventListener('keydown', throttledLogKey);
+        keyBoard.addEventListener('click', () => {
+            keyBoard.style.backgroundColor = "#67C23A"
+        });
+        // 监听按钮失去焦点事件
+        keyBoard.addEventListener('blur', function () {
+            // 按钮失去焦点后移除键盘事件监听
+            keyBoard.style.backgroundColor = "#ffffff"
+        });
 
+    }
     const btn1 = document.getElementById('zuo')
     const btn2 = document.getElementById('you')
     const btn3 = document.getElementById('shang')
@@ -208,10 +229,38 @@ onMounted(() => {
 #zuo,
 #you {
     border-radius: 20px;
-    background-color: pink;
 }
 
-.jianKong {
-    display: flex;
+.jian {
+    text-align: center;
+    background-color: aliceblue;
+}
+
+.jianAc {
+    text-align: center;
+    background-color: rgb(105, 228, 105);
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    padding: 16px;
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+    /*添加模糊度*/
+
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.rongQi {
+    height: 100%;
+    background: url("@/assets/bac/Kirby_Background_HQ.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 </style>
