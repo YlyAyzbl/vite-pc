@@ -27,7 +27,7 @@
 
             <div class="text item">
                 <!-- <img v-if="showImage" src="@/assets/load/load.png" alt=""> -->
-                <video @loadedmetadata="onVideoLoaded" id="carVideo" src="@/assets/car/ball.mp4"></video>
+                <video @loadedmetadata="onVideoLoaded" id="carVideo" src="assects/car/小球循环.mp4"></video>
             </div>
         </div>
 
