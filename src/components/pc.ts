@@ -1,15 +1,20 @@
 import io from 'socket.io-client';
 import { onMounted, ref } from 'vue';
+import { Chat } from '@/utils/chat';
 
-let ling = '00,00,of\n'
-// const socket = io("http://45.128.220.103:3000");
-function zero() {
-    // socket.emit('message', { from: 'cat', to: 'car', message: ling });
+
+interface Data {
+    type: string;
+    msg: string;
 }
 
 
 function init(key: string) {
 
+    const shang: Data = { type: 'move', msg: JSON.stringify({ x: 0, y: 1 }) }
+    const xia: Data = { type: 'move', msg: JSON.stringify({ x: 0, y: -1 }) }
+    const zuo: Data = { type: 'move', msg: JSON.stringify({ x: -1, y: 1 }) }
+    const you: Data = { type: 'move', msg: JSON.stringify({ x: 1, y: 0 }) }
 
     // const socket = io("http://45.128.220.103:3001");
     const changeColor = (btn: HTMLElement | null, t?: string) => {
@@ -17,7 +22,6 @@ function init(key: string) {
             if (t == null) {
                 btn.style.backgroundColor = "#35363a";
                 btn.style.color = "white";
-
             } else {
                 btn.style.background = "#f0f0f0"
                 btn.style.color = "black";
@@ -32,12 +36,6 @@ function init(key: string) {
 
 
 
-    let zuo = '-1,00,of\n'
-    let ling = '00,00,of\n'
-    let you = '01,00,of\n'
-    let shang = '00,01,of\n'
-    let xia = '00,-1,of\n'
-
 
     // 客户端 cat
 
@@ -48,19 +46,19 @@ function init(key: string) {
 
 
     if (key == 'W' || key == 'w') {
-
+        Chat(shang)
         changeColor(btn3)
     }
     if (key == 'S' || key == 's') {
-
+        Chat(xia)
         changeColor(btn4)
     }
     if (key == 'A' || key == 'a') {
-   
+        Chat(zuo)
         changeColor(btn1)
     }
     if (key == 'D' || key == 'd') {
-
+        Chat(you)
         changeColor(btn2)
     }
 
