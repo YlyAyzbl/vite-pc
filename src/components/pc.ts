@@ -16,7 +16,7 @@ function init(key: string) {
     const zuo: Data = { type: 'move', msg: JSON.stringify({ x: -1, y: 1 }) }
     const you: Data = { type: 'move', msg: JSON.stringify({ x: 1, y: 0 }) }
 
-    // const socket = io("http://45.128.220.103:3001");
+
     const changeColor = (btn: HTMLElement | null, t?: string) => {
         if (btn != null) {
             if (t == null) {
@@ -44,7 +44,7 @@ function init(key: string) {
     const btn3 = document.getElementById('shang')
     const btn4 = document.getElementById('xia')
 
-
+    console.log('代码执行，当前按键是', key)
     if (key == 'W' || key == 'w') {
         Chat(shang)
         changeColor(btn3)

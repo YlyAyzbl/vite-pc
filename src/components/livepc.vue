@@ -49,6 +49,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { init } from "@/components/pc"
 import { GetStream, GetStream2, GetStream3, GetStream4 } from '../utils/peer'
 import { RemoveClass, AddClass } from '../utils/simple'
+import { Chat } from '@/utils/chat'
 const jk1S = ref(true)
 const jk2S = ref(true)
 const jk3S = ref(true)
@@ -78,7 +79,7 @@ function destroyVideoPlayer(id: string) {
 }
 
 
-
+const keys = ref('')
 
 
 
@@ -113,7 +114,10 @@ let chaoSheng = ref(false);
 
 
 function logKey(event: any) {
-    init(event.key)
+
+    keys.value = event.key
+    init(keys.value)
+    keys.value = ''
 }
 
 const throttledLogKey = throttle(logKey, 100);
@@ -137,6 +141,10 @@ const changeColor = (btn: HTMLElement | null, t?: string) => {
     }
 
 
+}
+interface Data {
+    type: string;
+    msg: string;
 }
 
 onMounted(() => {
@@ -197,6 +205,16 @@ onMounted(() => {
     const keyBoard = document.getElementById('keyBoard');
     if (keyBoard) {
         keyBoard.addEventListener('keydown', throttledLogKey);
+        keyBoard.addEventListener('keyup', () => {
+            keys.value = ''
+            const zero: Data = { type: 'move', msg: JSON.stringify({ x: 0, y: 0 }) }
+
+            setTimeout(() => {
+                Chat(zero)
+                console.log('代码执行，按键结束', keys.value)
+            }, 150)
+
+        });
         keyBoard.addEventListener('click', () => {
             keyBoard.style.backgroundColor = "#67C23A"
         });
@@ -204,6 +222,8 @@ onMounted(() => {
         keyBoard.addEventListener('blur', function () {
             // 按钮失去焦点后移除键盘事件监听
             keyBoard.style.backgroundColor = "#ffffff"
+            const zero: Data = { type: 'move', msg: 'not move' }
+            Chat(zero)
         });
 
     }
