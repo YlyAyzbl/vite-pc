@@ -13,7 +13,7 @@ function init(key: string) {
 
     const shang: Data = { type: 'move', msg: JSON.stringify({ x: 0, y: 1 }) }
     const xia: Data = { type: 'move', msg: JSON.stringify({ x: 0, y: -1 }) }
-    const zuo: Data = { type: 'move', msg: JSON.stringify({ x: -1, y: 1 }) }
+    const zuo: Data = { type: 'move', msg: JSON.stringify({ x: -1, y: 0 }) }
     const you: Data = { type: 'move', msg: JSON.stringify({ x: 1, y: 0 }) }
 
 
