@@ -47,7 +47,7 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch } from 'vue'
 import { init } from "@/components/pc"
-import { GetStream, GetStream2, GetStream3, GetStream4 } from '../utils/peer'
+import flvjs from 'flv.js'
 import { RemoveClass, AddClass } from '../utils/simple'
 import { Chat } from '@/utils/chat'
 const jk1S = ref(true)
@@ -55,14 +55,40 @@ const jk2S = ref(true)
 const jk3S = ref(true)
 const jk4S = ref(true)
 
-function createVideoPlayer(id: string, object: any, pl: string) {
+
+
+
+
+const setVideo = (wsUrl: string, videoElement: HTMLMediaElement) => {
+    const flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: wsUrl,
+        isLive: true,
+    });
+    flvPlayer.attachMediaElement(videoElement)
+    // 启动 flv.js 实例
+    flvPlayer.load();
+    flvPlayer.play();
+    const stopVideo = () => {
+        flvPlayer.pause();
+        flvPlayer.unload();
+        flvPlayer.detachMediaElement();
+    };
+
+    return stopVideo;
+}
+
+
+
+
+function createVideoPlayer(id: string, pl: string) {
     // 创建video元素
     const videoElement = document.createElement('video');
     videoElement.controls = true;
     videoElement.id = id
     videoElement.width = 900
     videoElement.className = 'card'
-    videoElement.srcObject = object;
+
     // 将video元素添加到id为"jk"的父元素上
     const container = document.getElementById(pl);
     container?.appendChild(videoElement);
@@ -155,12 +181,17 @@ onMounted(() => {
 
 
     jk1?.addEventListener("click", () => {
+        let stopVideo = () => { }
         if (jk1S.value) {
             AddClass(jk1, "jianAc")
             jk1S.value = false
-            createVideoPlayer("v1", GetStream(), 'di1')
+            createVideoPlayer("v1", 'di1')
+            let video = document.getElementById("v1") as HTMLMediaElement
+
+            stopVideo = setVideo("ws://localhost:8080/ws", video)
         } else {
             RemoveClass(jk1, "jianAc")
+            stopVideo()
             destroyVideoPlayer("v1")
             jk1S.value = true
             console.log("执行移除")
@@ -168,35 +199,50 @@ onMounted(() => {
 
     })
     jk2?.addEventListener("click", () => {
+        let stopVideo = () => { }
         if (jk2S.value) {
             AddClass(jk2, "jianAc")
             jk2S.value = false
-            createVideoPlayer("v2", GetStream2(), 'di1')
+            createVideoPlayer("v2", 'di1')
+            let video = document.getElementById("v2") as HTMLMediaElement
+
+            stopVideo = setVideo("ws://localhost:8080/ws2", video)
         } else {
             RemoveClass(jk2, "jianAc")
             jk2S.value = true
+            stopVideo()
             destroyVideoPlayer("v2")
         }
     })
     jk3?.addEventListener("click", () => {
+        let stopVideo = () => { }
         if (jk3S.value) {
             AddClass(jk3, "jianAc")
             jk3S.value = false
-            createVideoPlayer("v3", GetStream3(), 'di2')
+            createVideoPlayer("v3", 'di2')
+            let video = document.getElementById("v3") as HTMLMediaElement
+
+            stopVideo = setVideo("ws://localhost:8080/ws3", video)
         } else {
             RemoveClass(jk3, "jianAc")
             jk3S.value = true
             destroyVideoPlayer("v3")
+            stopVideo()
         }
     })
     jk4?.addEventListener("click", () => {
+        let stopVideo = () => { }
         if (jk4S.value) {
             AddClass(jk4, "jianAc")
             jk4S.value = false
-            createVideoPlayer("v4", GetStream4(), 'di2')
+            createVideoPlayer("v4", 'di2')
+            let video = document.getElementById("v4") as HTMLMediaElement
+
+            stopVideo = setVideo("ws://localhost:8080/ws4", video)
         } else {
             RemoveClass(jk4, "jianAc")
             jk4S.value = true
+            stopVideo()
             destroyVideoPlayer("v4")
         }
     })
